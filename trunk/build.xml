@@ -1,0 +1,121 @@
+<project name="scheduler" basedir="./" default="all">
+
+    <!-- Local system paths -->
+    <property name="servlet.jar" value="./extlib/servlet.jar"/>
+    <property name="jdbc20ext.jar" value="./extlib/jdbc2_0-stdext.jar"/>
+    <property name="jcalendar.jar" value="./extlib/jcalendar.jar"/>
+    <property name="junit.jar" value="./extlib/junit.jar"/>
+
+    <!-- Project settings -->
+    <property name="project.title" value="scheduler"/>
+    <property name="project.distname" value="scheduler"/>
+    <property name="project.version" value="1"/>
+
+    <!-- Path settings -->
+    <property name="doc.path" value="doc/api"/>
+    <property name="doc.src" value="src"/>
+
+    <!-- classpath for Struts 1.1 -->
+    <path id="compile.classpath">
+        <pathelement path ="${servlet.jar}"/>
+	<pathelement path ="${jcalendar.jar}"/>
+	<pathelement path ="${junit.jar}"/>
+        <pathelement path ="${classpath}"/>
+    </path>
+
+
+    <!-- Check timestamp on files -->
+    <target name="prepare">
+        <tstamp/>
+    </target>
+
+
+    <!-- Normal build of application -->
+    <target name="compile" depends="prepare">
+        <javac debug="true" srcdir="src" destdir="classes">
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+
+    
+    <!-- copy resources -->
+    <target name="resource">
+      <copy todir="classes">
+        <fileset dir="src" excludes="**/*.java"/>
+      </copy>
+    </target>
+
+
+    <!-- Remove classes directory for clean build -->
+    <target name="clean"
+      description="Prepare for clean build">
+      <delete dir="classes"/>
+      <mkdir  dir="classes"/>
+      <delete file="scheduler.jar"/>
+      <delete file="scheduler.war"/>
+    </target>
+
+
+    <!-- Build Javadoc documentation -->
+    <target name="javadoc"
+     description="Generate JavaDoc API docs">
+        <delete dir="./doc/api"/>
+        <mkdir dir="./doc/api"/>
+        <javadoc sourcepath="./src/java"
+            destdir="./doc/api"
+            classpath="${servlet.jar}:${jdbc20ext.jar}"
+            packagenames="*"
+            author="true"
+            private="true"
+            version="true"
+            windowtitle="${project.title} API Documentation"
+            doctitle="&lt;h1&gt;${project.title} Documentation (Version ${project.version})&lt;/h1&gt;"
+            bottom="Copyright &#169; 2002">
+            <classpath refid="compile.classpath"/>
+        </javadoc>
+    </target>
+
+
+    <!-- Build entire project -->
+    <target name="project" depends="clean,prepare,compile,resource"/>
+
+    <!-- Create binary distribution -->
+    <target name="jarfile"
+        description="Create binary distribution">
+      <jar jarfile="${project.distname}.jar" 
+           basedir="./classes">
+        <manifest>
+	  <attribute name="Main-class" value="com.suntek.scheduler.ui.MainApplication"/>
+	</manifest>
+      </jar>
+    </target>
+
+    <target name="warfile"
+        description="Create war file">
+      <jar jarfile="${project.distname}.war" 
+           basedir="./scheduler">
+      </jar>
+    </target>
+
+    <target name="copyjar">
+      <copy file="${project.distname}.jar" todir="scheduler"/>
+      <copy file="${project.distname}.jar" todir="scheduler/WEB-INF/lib"/>
+    </target>
+
+    <target name="signjar">
+      <signjar jar="${project.distname}.jar" 
+      	keystore="myKeystore" alias="myself" storepass="scheduler"/>
+    </target>
+
+    <target name="signmysql">
+       <copy file="./extlib/mysql-connector-java-5.1.6-bin.jar" todir="scheduler"/>
+       <signjar jar="./scheduler/mysql-connector-java-5.1.6-bin.jar"
+       keystore="myKeystore" alias="myself" storepass="scheduler"/>
+   </target>
+   
+    <!-- Build project and create distribution-->
+    <target name="all" depends="project,signmysql,jarfile,signjar,copyjar,warfile"/>
+
+</project>
+
+

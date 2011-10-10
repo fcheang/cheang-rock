@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="extlib/fhlaf_1.0b2_bin.jar"/>
+	<classpathentry kind="lib" path="extlib/jcalendar.jar"/>
+	<classpathentry kind="lib" path="extlib/jdbc2_0-stdext.jar"/>
+	<classpathentry kind="lib" path="extlib/jta-spec1_0_1.jar"/>
+	<classpathentry kind="lib" path="extlib/servlet.jar"/>
+	<classpathentry kind="lib" path="scheduler/jdbc2_0-stdext.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="extlib/mysql-connector-java-5.1.6-bin.jar"/>
+	<classpathentry kind="lib" path="extlib/junit.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

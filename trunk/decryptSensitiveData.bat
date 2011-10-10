@@ -1,0 +1,1 @@
+java -classpath .\scheduler.jar;.\extlib\mysql-connector-java-5.1.6-bin.jar -DdbDriver=com.mysql.jdbc.Driver -DdbHost=%1 -DdbUsed=gold -DdbUser=steve -DdbPassword=st3v3 -DdebugOn=true com.suntek.scheduler.upgrade.DecryptSensitiveData
