@@ -1,0 +1,14 @@
+[PropertyInfo]
+provider,String,false,false,provider,provider,true,<default>
+startDate,java.util.Date,false,false,startDate,startDate,true,<default>
+endDate,java.util.Date,false,false,endDate,endDate,true,<default>
+referralId,int,false,false,referralId,referralId,true,<default>
+lastName,String,false,false,lastName,lastName,true,<default>
+firstName,String,false,false,firstName,firstName,true,<default>
+type,String,false,false,type,type,true,<default>
+notes,String,false,false,notes,notes,true,<default>
+[IconNames]
+
+
+
+
