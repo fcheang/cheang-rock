@@ -862,25 +862,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         }else{
         	appt.setEval(false);
         	appt.setEvalYear(null);        	
-        }
-        
-    	// check if HealthPac ins
-    	Patient patient = ReadSvc.getInstance().getPatientById(refId);
-    	List<Insurance> insList = patient.getIns();
-    	boolean isHealthPac = false;
-    	for (Insurance ins : insList){
-    		if (ins.getInsCompany().startsWith(Constant.HEALTHPAC_PREFIX)){
-    			isHealthPac = true;
-    			break;
-    		}
-    	}                            	
-    	if (isHealthPac){
-            JOptionPane.showMessageDialog(apptDialog,
-                    "This is a HealthPac client, contact PTW case manager at 510-872-2422",
-                    "Reminder",
-                    JOptionPane.INFORMATION_MESSAGE);        		
-    	}
-        
+        }               
         
         appt.setReferralId(refId);
         
@@ -1019,6 +1001,25 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
 	            return;        	
 	        }
         }
+        
+    	// check if HealthPac ins        
+        if (!appt.isBlockTime()){
+        	Patient patient = ReadSvc.getInstance().getPatientById(refId);
+        	List<Insurance> insList = patient.getIns();
+        	boolean isHealthPac = false;
+        	for (Insurance ins : insList){
+        		if (ins.getInsCompany().startsWith(Constant.HEALTHPAC_PREFIX)){
+        			isHealthPac = true;
+        			break;
+        		}
+        	}                            	
+        	if (isHealthPac){
+                JOptionPane.showMessageDialog(apptDialog,
+                        "This is a HealthPac client, contact PTW case manager at 510-872-2422",
+                        "Reminder",
+                        JOptionPane.INFORMATION_MESSAGE);        		
+        	}        	
+        }        
         
         // create new appointment
         try{	            	
