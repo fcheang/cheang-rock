@@ -79,7 +79,7 @@ public class ReadQueries {
         "select a.apptId, a.referralId, r.lastName, r.firstName, a.provider, "+
         "a.appointmentDate, a.endTime, a.notes, a.type, a.clinicName, "+
         "a.translationSvcNeeded, a.language, a.collateralReceived, a.isEligible, r.phoneNumber, r.birthDate, a.userId, "+
-        "a.isEvaluation, a.evaluationYear, a.isWalkIn "+
+        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.authNum, a.countyNum "+
         "from appointment a left join referral r on (a.referralId = r.referralId)"+
         "where "+
         "a.provider = ? and "+
@@ -90,7 +90,7 @@ public class ReadQueries {
         "select a.apptId, a.referralId, r.lastName, r.firstName, a.provider, "+
         "a.appointmentDate, a.endTime, a.notes, a.type, a.clinicName, "+
         "a.translationSvcNeeded, a.language, a.collateralReceived, a.isEligible, r.phoneNumber, r.birthDate, a.userId, "+
-        "a.isEvaluation, a.evaluationYear, a.isWalkIn "+
+        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.authNum, a.countyNum "+
         "from appointment a left join referral r on (a.referralId = r.referralId)"+
         "where "+
         "a.provider = ? and "+
@@ -101,7 +101,7 @@ public class ReadQueries {
         "select a.apptId, a.referralId, r.lastName, r.firstName, a.provider, "+
         "a.appointmentDate, a.endTime, a.notes, a.type, a.clinicName, "+
         "a.translationSvcNeeded, a.language, a.collateralReceived, a.isEligible, r.phoneNumber, r.birthDate, a.userId, "+
-        "a.isEvaluation, a.evaluationYear, a.isWalkIn "+
+        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.authNum, a.countyNum "+
         "from appointment a left join referral r on (a.referralId = r.referralId)"+
         "where "+
         "a.clinicName = ? and "+
@@ -112,7 +112,7 @@ public class ReadQueries {
         "select a.apptId, a.referralId, r.lastName, r.firstName, a.provider, "+
         "a.appointmentDate, a.endTime, a.notes, a.type, a.clinicName, "+
         "a.translationSvcNeeded, a.language, a.collateralReceived, a.isEligible, r.phoneNumber, r.birthDate, a.userId, "+
-        "a.isEvaluation, a.evaluationYear, a.isWalkIn "+
+        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.authNum, a.countyNum "+
         "from appointment a, referral r "+
         "where a.referralId = r.referralId and "+
         "r.referralId = ? "+
@@ -122,7 +122,7 @@ public class ReadQueries {
         "select a.apptId, a.referralId, r.lastName, r.firstName, a.provider, "+
         "a.appointmentDate, a.endTime, a.notes, a.type, a.clinicName, "+
         "a.translationSvcNeeded, a.language, a.collateralReceived, a.isEligible, r.phoneNumber, r.birthDate, a.userId, "+
-        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.cancelBy, a.isCancelByPatient, a.isCancelByClinic, a.isWnTwentyFourHrs, "+
+        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.authNum, a.countyNum, a.cancelBy, a.isCancelByPatient, a.isCancelByClinic, a.isWnTwentyFourHrs, "+
         "a.cancelReason, a.cancelOtherReason "+
         "from canceledAppointment a, referral r "+
         "where a.referralId = r.referralId and "+
@@ -133,7 +133,7 @@ public class ReadQueries {
         "select a.apptId, a.referralId, r.lastName, r.firstName, a.provider, "+
         "a.appointmentDate, a.endTime, a.notes, a.type, a.clinicName, "+
         "a.translationSvcNeeded, a.language, a.collateralReceived, a.isEligible, r.phoneNumber, r.birthDate, a.userId, "+
-        "a.isEvaluation, a.evaluationYear, a.isWalkIn "+
+        "a.isEvaluation, a.evaluationYear, a.isWalkIn, a.authNum, a.countyNum "+
         "from appointment a, referral r "+
         "where a.referralId = r.referralId and "+
         "a.apptId = ? ";

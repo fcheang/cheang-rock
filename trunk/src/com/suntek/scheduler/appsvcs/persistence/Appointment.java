@@ -35,7 +35,9 @@ public class Appointment {
     private String lang = "";
     private boolean collRcv;
     private boolean walkIn;
-    private String canceledBy;
+    private String authNum = "";
+    private String countyNum = "";
+	private String canceledBy;
 	private boolean cancelByPatient;
     private boolean cancelByClinic;
     private boolean isWnTwentyFourHrs;
@@ -476,6 +478,19 @@ public class Appointment {
     public String getFullName(){
         return lastName + ", "+firstName;
     }
+    
+    public String getAuthNum() {
+		return authNum;
+	}
+	public void setAuthNum(String authNum) {
+		this.authNum = authNum;
+	}
+	public String getCountyNum() {
+		return countyNum;
+	}
+	public void setCountyNum(String countyNum) {
+		this.countyNum = countyNum;
+	}    
 
     public String toString(){
         return apptId+", "+referralId+", "+provider+", "+type;
@@ -510,7 +525,9 @@ public class Appointment {
                 this.notes.equals(newAppt.notes) &&
                 this.lang.equals(newAppt.lang) &&
                 this.isEligible.equals(newAppt.isEligible) &&
-                this.walkIn == newAppt.walkIn){
+                this.walkIn == newAppt.walkIn &&
+                this.authNum.equals(newAppt.authNum) &&
+                this.countyNum.equals(newAppt.countyNum)){
                 return true;
             }
         }

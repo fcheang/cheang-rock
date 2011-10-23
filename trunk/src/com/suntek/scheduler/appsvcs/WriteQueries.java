@@ -20,28 +20,28 @@ public class WriteQueries {
         "insert into appointment (apptId, referralId, clinicName, appointmentDate, provider, "+
         "translationSvcNeeded, language, collateralReceived, isEligible, notes, userId, "+
         "endTime, type, modifyBy, modificationDate, isEvaluation, "+
-        "evaluationYear, isWalkIn) "+
+        "evaluationYear, isWalkIn, authNum, countyNum) "+
         "values (?, ?, ?, ?, ?, "+
         "?, ?, ?, ?, ?, ?, "+
         "?, ?, ?, ?, ?, "+
-        "?, ?)";
+        "?, ?, ?, ?)";
 
     public static final String insertDeletedAppt =
         "insert into deletedAppointment (apptId, referralId, clinicName, appointmentDate, provider, "+
         "translationSvcNeeded, collateralReceived, isEligible, notes, userId, endTime, "+
-        "type, deletedBy, deleteDate, isEvaluation, evaluationYear, isWalkIn) "+
+        "type, deletedBy, deleteDate, isEvaluation, evaluationYear, isWalkIn, authNum, countyNum) "+
         "values (?, ?, ?, ?, ?, "+
         "?, ?, ?, ?, ?, ?, "+
-        "?, ?, ?, ?, ?, ?)";
+        "?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String insertCanceledAppt =
         "insert into canceledAppointment (apptId, referralId, clinicName, appointmentDate, provider, "+
         "translationSvcNeeded, collateralReceived, isEligible, notes, userId, endTime, "+
-        "type, cancelBy, cancelDate, isEvaluation, evaluationYear, isWalkIn, isCancelByPatient, isCancelByClinic, isWnTwentyFourHrs, "+
+        "type, cancelBy, cancelDate, isEvaluation, evaluationYear, isWalkIn, authNum, countyNum, isCancelByPatient, isCancelByClinic, isWnTwentyFourHrs, "+
         "cancelReason, cancelOtherReason) "+
         "values (?, ?, ?, ?, ?, "+
         "?, ?, ?, ?, ?, ?, "+
-        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String insertApptStatus =
         "insert into referralStatus (referralId, apptId, status, createDate, removeDate, isActive, notes, reasonCode) "+
@@ -93,7 +93,13 @@ public class WriteQueries {
 
     public static final String updateApptIsWalkIn =
         "update appointment set isWalkIn = ? where apptId = ?";
-    
+
+    public static final String updateApptAuthNum =
+        "update appointment set authNum = ? where apptId = ?";
+
+    public static final String updateApptCountyNum =
+        "update appointment set countyNum = ? where apptId = ?";
+
     public static final String clearReminder =
         "update referral set reminder = '' where referralId = ?";
 
