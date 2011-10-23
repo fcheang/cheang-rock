@@ -1061,13 +1061,15 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
         appt.setEval(rs.getBoolean(18));
         appt.setEvalYear(rs.getString(19));
         appt.setWalkIn(rs.getBoolean(20));
+        appt.setAuthNum(rs.getString(21));
+        appt.setCountyNum(rs.getString(22));
         if (isCancelAppt){
-        	appt.setCanceledBy(rs.getString(21));
-        	appt.setCancelByPatient(rs.getBoolean(22));
-        	appt.setCancelByClinic(rs.getBoolean(23));
-        	appt.setWnTwentyFourHrs(rs.getBoolean(24));
-        	appt.setCancelReason(rs.getString(25));
-        	appt.setCancelOtherReason(rs.getString(26));
+        	appt.setCanceledBy(rs.getString(23));
+        	appt.setCancelByPatient(rs.getBoolean(24));
+        	appt.setCancelByClinic(rs.getBoolean(25));
+        	appt.setWnTwentyFourHrs(rs.getBoolean(26));
+        	appt.setCancelReason(rs.getString(27));
+        	appt.setCancelOtherReason(rs.getString(28));
         	appt.setStatus(Constant.CANCELED);;
         }else{
 	        if (!appt.getType().equals(Constant.Blocked)){

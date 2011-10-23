@@ -119,6 +119,22 @@ public class WriteSvc extends QuerySvc implements WriteSvcI {
                 executeUpdate(pstmt);
                 //con.commit();
             }
+            // authNum
+            if (oldAppt.getAuthNum().equals(newAppt.getAuthNum())){
+            	sql = WriteQueries.updateApptAuthNum;
+                pstmt = con.prepareStatement(sql);
+                setString(pstmt, 1, newAppt.getAuthNum());
+                setLong(pstmt, 2, oldAppt.getApptId());
+                executeUpdate(pstmt);            	
+            }
+            // countyNum
+            if (oldAppt.getCountyNum().equals(newAppt.getCountyNum())){
+            	sql = WriteQueries.updateApptCountyNum;
+                pstmt = con.prepareStatement(sql);
+                setString(pstmt, 1, newAppt.getCountyNum());
+                setLong(pstmt, 2, oldAppt.getApptId());
+                executeUpdate(pstmt);            	
+            }            
         }catch(SQLException e){
             throw new RuntimeException("Error: Problem executing: "+sql, e);
         }finally{
@@ -191,6 +207,8 @@ public class WriteSvc extends QuerySvc implements WriteSvcI {
             setBoolean(pstmt5, 15, oldAppt.isEval());
             setString(pstmt5, 16, oldAppt.getEvalYear());
             setBoolean(pstmt5, 17, oldAppt.isWalkIn());
+            setString(pstmt5, 18, oldAppt.getAuthNum());
+            setString(pstmt5, 19, oldAppt.getCountyNum());
             executeUpdate(pstmt5);
 
             //con.commit();
@@ -269,11 +287,13 @@ public class WriteSvc extends QuerySvc implements WriteSvcI {
             setBoolean(pstmt5, 15, oldAppt.isEval());
             setString(pstmt5, 16, oldAppt.getEvalYear());
             setBoolean(pstmt5, 17, oldAppt.isWalkIn());
-            setBoolean(pstmt5, 18, oldAppt.isCancelByPatient());
-            setBoolean(pstmt5, 19, oldAppt.isCancelByClinic());
-            setBoolean(pstmt5, 20, oldAppt.isWnTwentyFourHrs());
-            setString(pstmt5, 21, oldAppt.getCancelReason());
-            setString(pstmt5, 22, oldAppt.getCancelOtherReason());
+            setString(pstmt5, 18, oldAppt.getAuthNum());
+            setString(pstmt5, 19, oldAppt.getCountyNum());
+            setBoolean(pstmt5, 20, oldAppt.isCancelByPatient());
+            setBoolean(pstmt5, 21, oldAppt.isCancelByClinic());
+            setBoolean(pstmt5, 22, oldAppt.isWnTwentyFourHrs());
+            setString(pstmt5, 23, oldAppt.getCancelReason());
+            setString(pstmt5, 24, oldAppt.getCancelOtherReason());
             executeUpdate(pstmt5);
 
             //con.commit();
@@ -323,6 +343,8 @@ public class WriteSvc extends QuerySvc implements WriteSvcI {
             setBoolean(pstmt, 16, appt.isEval());
             setString(pstmt, 17, appt.getEvalYear());
             setBoolean(pstmt, 18, appt.isWalkIn());
+            setString(pstmt, 19, appt.getAuthNum());
+            setString(pstmt, 20, appt.getCountyNum());
             executeUpdate(pstmt);
 
             if (!appt.getType().equals(Constant.Blocked)){

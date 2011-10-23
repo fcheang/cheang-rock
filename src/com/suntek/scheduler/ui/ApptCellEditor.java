@@ -87,7 +87,17 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
     JRadioButton eligNoB = null;    
     ButtonGroup walkInBG = null;
     JRadioButton walkInYesB = null;
-    JRadioButton walkInNoB = null;    
+    JRadioButton walkInNoB = null;   
+    JPanel authNumCards = null;
+    JPanel authNumPanel = null;
+    JPanel emptyPanel3 = null;
+    JLabel authNumL = new JLabel("Authorization #: ");
+    JTextField authNumTF = null;
+    JPanel countyNumCards = null;
+    JPanel countyNumPanel = null;
+    JPanel emptyPanel4 = null;
+    JLabel countyNumL = new JLabel("County #: ");
+    JTextField countyNumTF = null;
 
     JLabel patientLabel = new JLabel("Patient: ");
     JTextField patientTextField = null;
@@ -281,13 +291,17 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         cl.show(langCards, "emptyPanel");
 
         crYesB.setSelected(true);
+        
         walkInNoB.setSelected(true);
+        ((CardLayout)authNumCards.getLayout()).show(authNumCards, "emptyPanel");        
+        ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "emptyPanel");
+ 
         
         actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER), true);
         actionPanel.add(closeButton);
 
         apptDialog = new JDialog(f, "Schedule Appointment", true);
-        apptDialog.setSize(450, 650);
+        apptDialog.setSize(450, 700);
         //apptDialog.setResizable(false);
         apptDialog.setLocationRelativeTo(f);
         apptDialog.addWindowListener(new WindowAdapter() {
@@ -304,7 +318,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
     private JPanel createNewApptPanel(){
     	JPanel mainPanel = new JPanel(new BorderLayout());
 		
-        JPanel subPanel1 = new JPanel(new GridLayout(12, 1));
+        JPanel subPanel1 = new JPanel(new GridLayout(14, 1));
         subPanel1.add(providerPanel);
         subPanel1.add(apptTypePanel);
         subPanel1.add(evalYearCards);
@@ -317,6 +331,8 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         subPanel1.add(crPanel);
         subPanel1.add(eligPanel);
         subPanel1.add(walkInPanel);
+        subPanel1.add(authNumCards);
+        subPanel1.add(countyNumCards);
 
         JPanel subPanel2 = new JPanel(new BorderLayout());
         subPanel2.add(notesLabel, BorderLayout.NORTH);
@@ -384,8 +400,21 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         }
         if (appt.isWalkIn()){
         	walkInYesB.setSelected(true);
+        	
+            ((CardLayout)authNumCards.getLayout()).show(authNumCards, "authNumPanel");
+            authNumTF.setText(appt.getAuthNum());
+            
+            ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "countyNumPanel");
+            countyNumTF.setText(appt.getCountyNum());
         }else{
         	walkInNoB.setSelected(true);
+        	
+            ((CardLayout)authNumCards.getLayout()).show(authNumCards, "emptyPanel");
+            authNumTF.setText("");
+            
+            ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "emptyPanel");
+            countyNumTF.setText("");
+        	
         }
         notesTextArea.setText(appt.getNotes());
         
@@ -410,7 +439,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         actionPanel2.add(noShowsButton);
 
         apptDialog = new JDialog(f, "Appointment Detail", true);
-        apptDialog.setSize(450, 750);
+        apptDialog.setSize(450, 800);
         //apptDialog.setResizable(false);
         apptDialog.setLocationRelativeTo(f);
         apptDialog.addWindowListener(new WindowAdapter() {
@@ -445,7 +474,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
     private JPanel createApptPanel(){
     	JPanel mainPanel = new JPanel(new BorderLayout());
     		
-        JPanel subPanel1 = new JPanel(new GridLayout(10, 1));
+        JPanel subPanel1 = new JPanel(new GridLayout(12, 1));
         subPanel1.add(providerPanel);
         subPanel1.add(patCards);
         subPanel1.add(startTimePanel);
@@ -457,6 +486,8 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
             subPanel1.add(crPanel);
             subPanel1.add(eligPanel);
             subPanel1.add(walkInPanel);
+            subPanel1.add(authNumCards);
+            subPanel1.add(countyNumCards);
         }
         JPanel subPanel2 = new JPanel(new BorderLayout());
         subPanel2.add(notesLabel, BorderLayout.NORTH);
@@ -884,7 +915,26 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
             appt.setLang("");
         }
 
-        appt.setWalkIn(walkInYesB.isSelected());
+        // check authNum and countyNum for walkIn appt
+        if (walkInYesB.isSelected()){
+        	appt.setWalkIn(true);   
+        	if (authNumTF.getText() == null || authNumTF.getText().trim().equals("")){
+        		JOptionPane.showMessageDialog(apptDialog, "Please specify Authorization # for Walk-in appointment!",
+        				"Missing Authoriztion #", JOptionPane.ERROR_MESSAGE);
+        		return;
+        	}
+        	if (countyNumTF.getText() == null || countyNumTF.getText().trim().equals("")){
+        		JOptionPane.showMessageDialog(apptDialog, "Please specify County # for Walk-in appointment!",
+        				"Missing County #", JOptionPane.ERROR_MESSAGE);
+        		return;        	
+        	}        	
+        	appt.setAuthNum(authNumTF.getText());
+        	appt.setCountyNum(countyNumTF.getText());
+        }else{
+        	appt.setWalkIn(false);
+        	appt.setAuthNum("");
+        	appt.setCountyNum("");        	        	
+        }
         
         appt.setStartDate(startTime.getTime());
         appt.setEndDate(endTime.getTime());
@@ -1152,7 +1202,15 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
                 appt.setLang("");
             }
 
-            appt.setWalkIn(walkInYesB.isSelected());
+            if (walkInYesB.isSelected()){
+            	appt.setWalkIn(true);
+            	appt.setAuthNum(authNumTF.getText());
+            	appt.setCountyNum(countyNumTF.getText());
+            }else{
+            	appt.setWalkIn(false);
+            	appt.setAuthNum("");
+            	appt.setCountyNum("");
+            }            
             
             Calendar startTime = (Calendar) f.selectedDate.clone();
             int stYear = f.selectedDate.get(Calendar.YEAR);
@@ -1253,12 +1311,26 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
                                           JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         if (newAppt.getNotes() != null && newAppt.getNotes().length() > 200){
             JOptionPane.showMessageDialog(apptDialog, "Appointment Notes is too long. Maximum size is 200. Please delete some text in the Notes.",
                                           "Notes too long", JOptionPane.ERROR_MESSAGE);
             return;
         }        
 
+        if (newAppt.isWalkIn()){
+        	if (newAppt.getAuthNum() == null || newAppt.getAuthNum().trim().equals("")){
+        		JOptionPane.showMessageDialog(apptDialog, "Please specify Authorization # for Walk-in appointment!",
+        				"Missing Authoriztion #", JOptionPane.ERROR_MESSAGE);
+        		return;
+        	}
+        	if (newAppt.getCountyNum() == null || newAppt.getCountyNum().trim().equals("")){
+        		JOptionPane.showMessageDialog(apptDialog, "Please specify County # for Walk-in appointment!",
+        				"Missing County #", JOptionPane.ERROR_MESSAGE);
+        		return;        	
+        	}        	
+        }
+        
         WriteSvc.getInstance().updateAppt(oldAppt, newAppt);
 
         DailyApptTableModel model = (DailyApptTableModel)apptTable.getModel();
@@ -1670,9 +1742,51 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         walkInBG.add(walkInYesB);
         walkInBG.add(walkInNoB);
 
+        authNumCards = new JPanel(new CardLayout());
+        authNumPanel = new JPanel(new FlowLayout(FlowLayout.LEFT), false);
+        emptyPanel3 = new JPanel(new FlowLayout(FlowLayout.LEFT), false);
+        authNumTF = new JTextField("", 20);
+        authNumCards.add(authNumPanel, "authNumPanel");
+        authNumCards.add(emptyPanel3, "emptyPanel");
+        authNumPanel.add(authNumL);
+        authNumTF.setEditable(true);
+        authNumPanel.add(authNumTF);
+
+        countyNumCards = new JPanel(new CardLayout());
+        countyNumPanel = new JPanel(new FlowLayout(FlowLayout.LEFT), false);
+        emptyPanel4 = new JPanel(new FlowLayout(FlowLayout.LEFT), false);
+        countyNumTF = new JTextField("", 20);
+        countyNumCards.add(countyNumPanel, "countyNumPanel");
+        countyNumCards.add(emptyPanel4, "emptyPanel");
+        countyNumPanel.add(countyNumL);
+        countyNumTF.setEditable(true);
+        countyNumPanel.add(countyNumTF);
+        
+        walkInYesB.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                ((CardLayout)authNumCards.getLayout()).show(authNumCards, "authNumPanel");
+                ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "countyNumPanel");                
+            }
+        });
+        walkInNoB.addActionListener( new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ((CardLayout) authNumCards.getLayout()).show(authNumCards, "emptyPanel");
+                authNumTF.setText("");
+                
+                ((CardLayout) countyNumCards.getLayout()).show(countyNumCards, "emptyPanel");
+                countyNumTF.setText("");                
+            }
+        });
+        
+        ntPanel.add(needTranL);
+        ntPanel.add(ntYesB);
+        ntPanel.add(ntNoB);
+        
         if (!editable){
         	walkInYesB.setEnabled(false);
         	walkInNoB.setEnabled(false);
+            authNumTF.setEnabled(false);
+            countyNumTF.setEnabled(false);
         }
         walkInPanel.add(walkInL);
         walkInPanel.add(walkInYesB);
