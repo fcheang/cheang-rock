@@ -2,6 +2,11 @@ package com.suntek.scheduler.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.util.*;
@@ -11,7 +16,9 @@ import javax.swing.event.*;
 
 import com.toedter.calendar.JCalendar;
 import com.suntek.scheduler.appsvcs.persistence.Constant;
+import com.suntek.scheduler.appsvcs.persistence.Patient;
 import com.suntek.scheduler.appsvcs.JDBCConnector;
+import com.suntek.scheduler.appsvcs.ReadSvc;
 
 /**
  * <p>Title: Appointment Scheduler</p>
@@ -55,6 +62,7 @@ public class MainFrame
 
     JMenu jMenuReport = new JMenu();
     JMenuItem jMenuContraCostaEval = new JMenuItem();
+    JMenuItem jMenuExportMediCalPatient = new JMenuItem();
     
     JMenu jMenuHelp = new JMenu();
     JMenuItem jMenuHelpAbout = new JMenuItem();
@@ -195,6 +203,10 @@ public class MainFrame
         jMenuPrintAppt.addActionListener(new
                                      MainFrame_jMenuPrint_ActionAdapter(this));
 
+        jMenuExportMediCalPatient.setText("Export Alameda County Medi-Cal patient ...");
+        jMenuExportMediCalPatient.addActionListener(new 
+        		MainFrame_jMenuExportMediCalPatient_ActionAdapter(this));
+        
         jMenuSearch.setText("Search");
         jMenuSearchAppt.setText("Confirmation# ...");
         jMenuSearchAppt.addActionListener(new
@@ -216,6 +228,7 @@ public class MainFrame
                                          MainFrame_jMenuHelpAbout_ActionAdapter(this));
         jMenuBar.add(jMenuFile);
         jMenuFile.add(jMenuPrintAppt);
+        jMenuFile.add(jMenuExportMediCalPatient);
         jMenuFile.add(jMenuFileExit);
         jMenuBar.add(jMenuSearch);
         jMenuSearch.add(jMenuSearchAppt);
@@ -473,7 +486,52 @@ public class MainFrame
     		new AddHolidayDialog(f, f.getNextLocX(), f.getNextLocY(), false);
     	}
     }
-    
+
+	class MainFrame_jMenuExportMediCalPatient_ActionAdapter
+	implements ActionListener {
+	MainFrame adaptee;
+
+	MainFrame_jMenuExportMediCalPatient_ActionAdapter(MainFrame adaptee){
+		this.adaptee = adaptee;
+	}
+
+	public void actionPerformed(ActionEvent actionEvent) {
+		JFileChooser fc = new JFileChooser();
+		int retVal = fc.showSaveDialog(adaptee);
+		if (retVal == JFileChooser.APPROVE_OPTION){			
+			File f = fc.getSelectedFile();
+			List<Patient> pats = ReadSvc.getInstance().getPatientByIns("Medi-Cal - Alameda Cty ACCESS");
+			try{
+				JDialog diag = new JDialog();
+				diag.add(new JLabel("Exporting records ..."));
+				diag.setSize(20, 20);				
+				diag.setVisible(true);
+				
+				if (!f.exists()){
+					f.createNewFile();
+				}
+				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
+				bw.write(Patient.getExportHeader(", "));
+				bw.newLine();
+				for (Patient p : pats){
+					bw.write(p.getExportStr(", "));
+					bw.newLine();
+					bw.flush();
+				}
+				bw.close();
+				
+				diag.setVisible(false);
+				diag.dispose();
+				
+				JOptionPane.showMessageDialog(adaptee, "Exported "+pats.size()+" records to file "+f.getPath());
+			}catch(Exception e){
+				JOptionPane.showMessageDialog(adaptee, "Problem exporting to file: "+e.getClass().getName()+": "+e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	}
+}
+	
 	class MainFrame_jMenuContraCostaEval_ActionAdapter
 		implements ActionListener {
 		MainFrame adaptee;

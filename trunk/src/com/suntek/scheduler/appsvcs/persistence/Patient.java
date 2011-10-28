@@ -358,6 +358,22 @@ public class Patient implements Comparable {
     		return "";
     	}    	    	
     }
+
+    public String getMedicalId(int i){
+    	if (insList.size() > 0){
+    		return ((Insurance)insList.get(i)).getMedicalId();
+    	}else{
+    		return "";
+    	}    	    	
+    }
+
+    public String getMedIssueDateStr(int i){
+    	if (insList.size() > 0){
+    		return ((Insurance)insList.get(i)).getMedIssueDateStr();
+    	}else{
+    		return "";
+    	}    	    	
+    }
     
     public String getCopayStr(int i){
     	if (insList.size() > 0){
@@ -367,6 +383,14 @@ public class Patient implements Comparable {
     	}    	    	    	
     }
 
+    public String getCopayParityStr(int i){
+    	if (insList.size() > 0){
+    		return ((Insurance)insList.get(i)).getCopayParityStr();
+    	}else{
+    		return "";
+    	}    	    	    	
+    }
+    
     public BigDecimal getCopayBD(int i){
     	if (insList.size() > 0){
     		return ((Insurance)insList.get(i)).getCopay();
@@ -386,6 +410,22 @@ public class Patient implements Comparable {
     public String getNumAuthorizedVisit(int i){
     	if (insList.size() > 0){
     		return ((Insurance)insList.get(i)).getNumAuthVisitForMDStr();
+    	}else{
+    		return "";
+    	}    	    	    	    	    	
+    }
+
+    public String getEligEffDate(int i){
+    	if (insList.size() > 0){
+    		return ((Insurance)insList.get(i)).getEffStartDateStr();
+    	}else{
+    		return "";
+    	}    	    	    	    	    	
+    }
+
+    public String getEligTermDate(int i){
+    	if (insList.size() > 0){
+    		return ((Insurance)insList.get(i)).getEffEndDateStr();
     	}else{
     		return "";
     	}    	    	    	    	    	
@@ -439,5 +479,59 @@ public class Patient implements Comparable {
     	}else{
     		return -1;
     	}
+    }
+    
+    public static String getExportHeader(String sep){
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("FIRST NAME").append(sep);
+    	sb.append("LAST NAME").append(sep);
+    	sb.append("GENDER").append(sep);
+    	sb.append("SSN").append(sep);
+    	sb.append("DATE OF BIRTH").append(sep);
+    	sb.append("STREET ").append(sep);
+    	sb.append("APT#").append(sep);
+    	sb.append("CITY").append(sep);
+    	sb.append("STATE").append(sep);
+    	sb.append("ZIPCODE").append(sep);
+    	sb.append("PHONE#").append(sep);
+    	sb.append("EMAIL").append(sep);
+    	sb.append("ELIG. EFF DATE").append(sep);
+    	sb.append("ELIG. TERM DATE").append(sep);
+    	sb.append("INS. CO.").append(sep);
+    	sb.append("MEMBER ID/PSP#").append(sep);
+    	sb.append("COPAY PARITY").append(sep);
+    	sb.append("MEDI-CAL CIN#").append(sep);
+    	sb.append("MEDI-CAL ISSUE DATE");
+    	return sb.toString();    	
+    }
+    
+    public String getExportStr(String sep){
+        /*
+		r.firstName, r.lastName, r.gender, r.ssn, r.birthDate, r.streetAddress,
+		r.apartmentNumber, r.city, r.state, r.zipCode, r.phoneNumber, r.email,
+		i.eligEffDate, i.eligTermDate, i.insuranceCompany, i.memberId, i.copayParity,
+		i.medicalId, i.medicalIssueDate 
+        */
+    	StringBuilder sb = new StringBuilder();
+    	sb.append(this.getFirstName()).append(sep);
+    	sb.append(getLastName()).append(sep);
+    	sb.append(gender).append(sep);
+    	sb.append(ssn).append(sep);
+    	sb.append(Constant.df_s.format(birthDate)).append(sep);
+    	sb.append(streetAddress).append(sep);
+    	sb.append(apartmentNumber).append(sep);
+    	sb.append(city).append(sep);
+    	sb.append(state).append(sep);
+    	sb.append(zipCode).append(sep);
+    	sb.append(this.getPhoneNum()).append(sep);
+    	sb.append(this.getEmail()).append(sep);
+    	sb.append(this.getEligEffDate(0)).append(sep);
+    	sb.append(this.getEligTermDate(0)).append(sep);
+    	sb.append(this.getInsuranceCompany(0)).append(sep);
+    	sb.append(this.getMemberId(0)).append(sep);
+    	sb.append(this.getCopayParityStr(0)).append(sep);
+    	sb.append(this.getMedicalId(0)).append(sep);
+    	sb.append(this.getMedIssueDateStr(0));
+    	return sb.toString();
     }
 }

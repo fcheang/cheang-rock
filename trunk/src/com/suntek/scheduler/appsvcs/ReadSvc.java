@@ -1577,6 +1577,67 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
         }
         return appts;
     }
-    
+
+	@Override
+	public List<Patient> getPatientByIns(String insName) {
+        debug("getPatientByIns("+insName+")");
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        String sql = ReadQueries.getPatientByIns;
+        List<Patient> pats = new ArrayList<Patient>();
+        Patient pat = null;
+        Insurance ins = null;
+        try{
+            con = connector.getConnectionFromPool();
+            pstmt = con.prepareStatement(sql);            
+            setString(pstmt, 1, insName);
+            rs = executeQuery(pstmt);
+            
+            /*
+				r.firstName, r.lastName, r.gender, r.ssn, r.birthDate, r.streetAddress,
+				r.apartmentNumber, r.city, r.state, r.zipCode, r.phoneNumber, r.email,
+				i.eligEffDate, i.eligTermDate, i.insuranceCompany, i.memberId, i.copayParity,
+				i.medicalId, i.medicalIssueDate 
+             */
+            
+            while (rs.next()){            	
+                pat = new Patient();
+                ins = new Insurance();
+                pat.setFirstName(rs.getString(1));
+                pat.setLastName(rs.getString(2));
+                pat.gender = rs.getString(3);
+                pat.ssn = SecurityUtil.decrypt(rs.getString(4));
+                pat.setBirthDate(rs.getDate(5));
+                pat.streetAddress = rs.getString(6);
+                pat.apartmentNumber = rs.getString(7);
+                pat.city = rs.getString(8);
+                pat.state = rs.getString(9);
+                pat.zipCode = rs.getString(10);
+                pat.phoneNumber = rs.getString(11);
+                pat.email = rs.getString(12);
+                
+                ins.setEffStartDate(rs.getDate(13));
+                ins.setEffEndDate(rs.getDate(14));
+                ins.setInsCompany(rs.getString(15));
+                ins.setMemberId(rs.getString(16));
+                ins.setCopayParity(rs.getBigDecimal(17));
+                ins.setMedicalId(rs.getString(18));
+                ins.setMedIssueDate(rs.getDate(19));
+                
+                pat.addIns(ins);
+                
+                pats.add(pat);
+            }
+        }catch(SQLException e){
+            throw new RuntimeException("Error: Problem executing: "+sql, e);
+        }finally{
+            close(rs);
+            close(pstmt);
+            connector.releaseConnection(con);
+        }
+        return pats;
+	}    
     
 }
