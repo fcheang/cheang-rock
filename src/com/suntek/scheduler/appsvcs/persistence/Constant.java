@@ -43,6 +43,7 @@ public class Constant {
 
     // Constant
     public static final DateFormat df_l = DateFormat.getDateInstance(DateFormat.LONG);
+    public static final DateFormat df_s = DateFormat.getDateInstance(DateFormat.SHORT);
     public static final DateFormat tf_s = DateFormat.getTimeInstance(DateFormat.SHORT);
     public static final DateFormat dtf_s = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 

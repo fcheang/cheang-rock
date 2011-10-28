@@ -224,4 +224,16 @@ public class ReadQueries {
     
     public static String getNumApptByEligibility =
     	"select count(1) from appointment where referralId = ? and isEligible = ?";
+    
+    public static String getPatientByIns = 
+    	"select r.firstName, r.lastName, r.gender, r.ssn, r.birthDate, r.streetAddress, "+
+    	"r.apartmentNumber, r.city, r.state, r.zipCode, r.phoneNumber, r.email, "+
+    	"i.eligEffDate, i.eligTermDate, i.insuranceCompany, i.memberId, i.copayParity, "+
+    	"i.medicalId, i.medicalIssueDate "+
+    	"from referral r, insurance i where "+
+    	"r.referralId = i.referralId and "+
+    	"r.referralId in (select referralId from insurance where "+
+    	"insuranceCompany = ? ) "+
+    	"order by firstName, lastName, insuranceCompany";
+    
 }

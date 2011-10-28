@@ -130,5 +130,7 @@ public interface ReadSvcI {
 	public abstract int getNumInEligibleAppt(int refId);
 
 	public abstract List<Appointment> getCancelApptForPatient(int refId);
+
+	public abstract List<Patient> getPatientByIns(String ins);
 		
 }
