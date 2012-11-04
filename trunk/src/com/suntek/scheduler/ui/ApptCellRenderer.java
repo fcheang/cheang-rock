@@ -65,7 +65,11 @@ public class ApptCellRenderer extends DefaultTableCellRenderer implements TableC
                       appt.getType().equals(Constant.DoubleBook)){
                 // there is appt
                 if (appt.getStatus().equals(Constant.Scheduled)) {
-                    p.setBackground(Constant.MAIN_APPT_COLOR);
+                	if (appt.isEligible() != null && appt.isEligible().equals("no")){
+                		p.setBackground(Constant.NOT_ELIGIBLE_COLOR);                		
+                	}else{
+                		p.setBackground(Constant.SCHEDULED_COLOR);
+                	}
                 }
                 else if (appt.getStatus().equals(Constant.Seen)) {
                     p.setBackground(Constant.SEEN_COLOR);

@@ -27,12 +27,13 @@ public class Constant {
     public static Date lastActive = new Date();
 
     // Theme
-    public static final Color MAIN_APPT_COLOR = new Color(255, 255, 155);
+    public static final Color SCHEDULED_COLOR = new Color(255, 255, 155);
     public static final Color SEEN_COLOR = new Color(128, 255, 128);
     public static final Color NOT_SEEN_COLOR = new Color(155, 255, 255);
 
     public static final Color BLOCK_COLOR = new Color(255, 193, 193);
     public static final Color TIME_INTERVAL_COLOR = new Color(200, 200, 200);
+    public static final Color NOT_ELIGIBLE_COLOR = new Color(250, 175, 186 );    
 
     public static final Color TITLE_BAR_COLOR = new Color(119, 0, 0);
     public static final Color TITLE_BAR_TEXT_COLOR = Color.white;
