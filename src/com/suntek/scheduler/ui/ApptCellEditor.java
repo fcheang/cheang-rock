@@ -69,7 +69,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
     JComboBox clinicCB = null;
     JLabel needTranL = new JLabel("Need Translation Service? ");
     JLabel collReceived = new JLabel("Collateral Received? ");
-    JLabel eligL = new JLabel("Eligible for appt? ");
+    JLabel eligL = new JLabel("Eligible for appointment? ");
     JLabel walkInL = new JLabel("Walk-in? ");
     ButtonGroup needTranBG = null;
     JRadioButton ntYesB = null;
@@ -293,9 +293,8 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         crYesB.setSelected(true);
         
         walkInNoB.setSelected(true);
-        ((CardLayout)authNumCards.getLayout()).show(authNumCards, "emptyPanel");        
-        ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "emptyPanel");
- 
+        ((CardLayout)authNumCards.getLayout()).show(authNumCards, "authNumPanel");
+        ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "countyNumPanel");                 
         
         actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER), true);
         actionPanel.add(closeButton);
@@ -399,23 +398,17 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         	eligNoB.setSelected(true);
         }
         if (appt.isWalkIn()){
-        	walkInYesB.setSelected(true);
-        	
-            ((CardLayout)authNumCards.getLayout()).show(authNumCards, "authNumPanel");
-            authNumTF.setText(appt.getAuthNum());
-            
-            ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "countyNumPanel");
-            countyNumTF.setText(appt.getCountyNum());
+        	walkInYesB.setSelected(true);        	
+            //((CardLayout)authNumCards.getLayout()).show(authNumCards, "authNumPanel");            
+            //((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "countyNumPanel");
         }else{
-        	walkInNoB.setSelected(true);
-        	
-            ((CardLayout)authNumCards.getLayout()).show(authNumCards, "emptyPanel");
-            authNumTF.setText("");
-            
-            ((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "emptyPanel");
-            countyNumTF.setText("");
-        	
+        	walkInNoB.setSelected(true);        	
+            //((CardLayout)authNumCards.getLayout()).show(authNumCards, "emptyPanel");            
+            //((CardLayout)countyNumCards.getLayout()).show(countyNumCards, "emptyPanel");        	
         }
+        authNumTF.setText(appt.getAuthNum());
+        countyNumTF.setText(appt.getCountyNum());
+        
         notesTextArea.setText(appt.getNotes());
         
         actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER), true);
@@ -928,13 +921,12 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         				"Missing County #", JOptionPane.ERROR_MESSAGE);
         		return;        	
         	}        	
-        	appt.setAuthNum(authNumTF.getText());
-        	appt.setCountyNum(countyNumTF.getText());
         }else{
         	appt.setWalkIn(false);
-        	appt.setAuthNum("");
-        	appt.setCountyNum("");        	        	
         }
+        
+    	appt.setAuthNum(authNumTF.getText());
+    	appt.setCountyNum(countyNumTF.getText());        
         
         appt.setStartDate(startTime.getTime());
         appt.setEndDate(endTime.getTime());
@@ -1204,13 +1196,12 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
 
             if (walkInYesB.isSelected()){
             	appt.setWalkIn(true);
-            	appt.setAuthNum(authNumTF.getText());
-            	appt.setCountyNum(countyNumTF.getText());
             }else{
             	appt.setWalkIn(false);
-            	appt.setAuthNum("");
-            	appt.setCountyNum("");
-            }            
+            }
+            
+        	appt.setAuthNum(authNumTF.getText());
+        	appt.setCountyNum(countyNumTF.getText());            
             
             Calendar startTime = (Calendar) f.selectedDate.clone();
             int stYear = f.selectedDate.get(Calendar.YEAR);
@@ -1762,6 +1753,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         countyNumTF.setEditable(true);
         countyNumPanel.add(countyNumTF);
         
+        /*
         walkInYesB.addActionListener( new ActionListener() {
             public void actionPerformed(ActionEvent e){
                 ((CardLayout)authNumCards.getLayout()).show(authNumCards, "authNumPanel");
@@ -1777,6 +1769,7 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
                 countyNumTF.setText("");                
             }
         });
+        */
         
         ntPanel.add(needTranL);
         ntPanel.add(ntYesB);

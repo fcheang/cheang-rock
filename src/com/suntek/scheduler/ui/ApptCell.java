@@ -16,7 +16,6 @@ import com.suntek.scheduler.appsvcs.persistence.Appointment;
  * @version 1.0
  */
 public class ApptCell {
-
     private Appointment appt = null;
     private Date apptDate = null;
 
