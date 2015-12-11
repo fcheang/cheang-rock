@@ -1113,10 +1113,10 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         }
         if (appt.needTranSvc()){
             JOptionPane.showMessageDialog(apptDialog,
-                    "Patient requires translation service for appointment.\n"+
-                    "Please call Scheduler, Interpreters Unlimited\n"+
-                    "Phone: (800)726-9891 or\n"+
-                    "Email: jorge@iugroup.com",
+            		"Patient requires translation services for appointment.\n"+
+            		"Please contact Language Line Solutions for On Demand \n"+
+            		"over the phone interpreting.  \n"+
+            		"Phone:  866.874.3972. Client ID: 298506.",
                     "Need Translation Service Alert",
                     JOptionPane.INFORMATION_MESSAGE);
         }
