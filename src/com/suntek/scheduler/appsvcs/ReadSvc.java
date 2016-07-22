@@ -1111,9 +1111,8 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
     /* (non-Javadoc)
 	 * @see com.suntek.scheduler.appsvcs.ReadSvcI#acquireSeqLock(java.lang.String)
 	 */
-    public void acquireSeqLock(String lockName){
+    public void acquireSeqLock(Connection con, String lockName){
         String deleteSeq = "delete from seqLock where lockName = '"+lockName+"'";
-        Connection con = connector.getConnectionFromPool();
         Statement stmt = null;
         int num = 0;
         try{
@@ -1136,9 +1135,8 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
     /* (non-Javadoc)
 	 * @see com.suntek.scheduler.appsvcs.ReadSvcI#releaseSeqLock(java.lang.String)
 	 */
-    public void releaseSeqLock(String lockName){
+    public void releaseSeqLock(Connection con, String lockName){
         String insertSeq = "insert into seqLock values ( '"+lockName+"' )";
-        Connection con = connector.getConnectionFromPool();
         Statement stmt = null;
         try{
             stmt = con.createStatement();
@@ -1153,18 +1151,18 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
 	 */
     public long getNextSeq(String tableName){
         debug("calling getNextSeq("+tableName+")");
-
-        acquireSeqLock(tableName);
-
+        Connection con = null;
         PreparedStatement pstmt1 = null;
         PreparedStatement pstmt2 = null;
 
         ResultSet rs = null;
-        Connection con = null;
         String sql = ReadQueries.getNextSeq;
         long nextSeq = 0;
         try{
-            con = connector.getConnectionFromPool();
+        	con = connector.getConnectionFromPool();
+            con.setAutoCommit(false);
+            acquireSeqLock(con, tableName);
+        	
             pstmt1 = con.prepareStatement(sql);
             setString(pstmt1, 1, tableName);
             rs = pstmt1.executeQuery();
@@ -1176,16 +1174,26 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
             pstmt2 = con.prepareStatement(sql);
             setString(pstmt2, 1, tableName);
             pstmt2.executeUpdate();
-
-            //con.commit();
+            releaseSeqLock(con, tableName);
+            con.commit();
         }catch(SQLException e){
+        	try {
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
             throw new RuntimeException("Error: Problem executing: "+sql, e);
         }finally{
             close(rs);
             close(pstmt1);
-            close(pstmt2);
+            close(pstmt2);            
+            try {
+				con.setAutoCommit(true);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Error: Problem resetting autoCommit in getNextSeq.", e);
+			}                        
             connector.releaseConnection(con);
-            releaseSeqLock(tableName);
         }
         return nextSeq;
     }
@@ -1638,6 +1646,6 @@ public class ReadSvc extends QuerySvc implements ReadSvcI {
             connector.releaseConnection(con);
         }
         return pats;
-	}    
+	}
     
 }

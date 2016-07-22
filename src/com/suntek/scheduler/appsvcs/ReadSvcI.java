@@ -1,6 +1,7 @@
 package com.suntek.scheduler.appsvcs;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
@@ -88,9 +89,9 @@ public interface ReadSvcI {
 	public abstract List getAllOverlapAppt(String provider, Date startTime,
 			Date endTime);
 
-	public abstract void acquireSeqLock(String lockName);
+	public abstract void acquireSeqLock(Connection con, String lockName);
 
-	public abstract void releaseSeqLock(String lockName);
+	public abstract void releaseSeqLock(Connection con, String lockName);
 
 	public abstract long getNextSeq(String tableName);
 
