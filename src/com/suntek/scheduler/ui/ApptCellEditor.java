@@ -990,49 +990,6 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
             return;
         }
     	
-        // check if evaluation already done
-    	Patient evalPat = ReadSvc.getInstance().getEvalPatientByInsAndId(refId, Constant.CONTRA_COSTA_ACCESS);        
-        if (!appt.isBlockTime() && !appt.isEval()){
-        	if (evalPat != null){
-		        if ((evalPat.getInsAdmitYear() < stYear)){
-
-		        	int errYear = PSService.getService().checkEvaluation(evalPat, stYear - 1, startTime.getTime());		        	
-		        	if (errYear != 0){
-			            if (Constant.appRole.contains(Constant.ADMINISTRATOR) || Constant.appRole.contains(Constant.BILLING)){
-			    			int val = JOptionPane.showConfirmDialog(dialogPanel,
-			    					errYear+" evaluation is not done for "+pat+"\n"+
-			    					"Do you still want to schedule the appointment?",
-			        				"Evaluation warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			        			if (val == JOptionPane.NO_OPTION){
-			        				return;
-			        			}            
-			            }else{        	
-			            	JOptionPane.showMessageDialog(apptDialog, "Schedule appointment is not allowed for "+pat+"\n "+
-			            			"because annual evaluation is not done for year "+errYear+".\nPlease contact the billing department to resolve the issue.");
-			                return;
-			            }
-		        	}		        		
-		        	
-		        	errYear = PSService.getService().checkEvaluation(evalPat, stYear, startTime.getTime());		        	
-		        	if (errYear != 0){
-			            if (Constant.appRole.contains(Constant.ADMINISTRATOR) || Constant.appRole.contains(Constant.BILLING)){
-			    			int val = JOptionPane.showConfirmDialog(dialogPanel,
-			    					errYear+" evaluation is not done for "+pat+"\n"+
-			    					"Do you still want to schedule the appointment?",
-			        				"Evaluation warning", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			        			if (val == JOptionPane.NO_OPTION){
-			        				return;
-			        			}            
-			            }else{        	
-			            	JOptionPane.showMessageDialog(apptDialog, "Schedule appointment is not allowed for "+pat+"\n "+
-			            			"because annual evaluation is not done for year "+errYear+".\nPlease contact the billing department to resolve the issue.");
-			                return;
-			            }
-		        	}
-		        }
-        	}
-        }
-        
         // check eligibility
         if (!appt.isBlockTime() && !appt.isEval()){
 	        int numInElig = ReadSvc.getInstance().getNumInEligibleAppt(refId);
@@ -1073,12 +1030,6 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         }                       
         
         needTranslationAlert(appt);
-        
-        if (!appt.isBlockTime() && !appt.isEval()){
-        	if (evalPat != null){
-        		evaluationAlert(evalPat);
-        	}
-        }
         
         refreshTable();
     }
@@ -1122,27 +1073,6 @@ public class ApptCellEditor extends ApptCellRenderer implements TableCellEditor,
         }
     }
 
-    private void evaluationAlert(Patient pat){
-		Calendar today = new GregorianCalendar();
-		Calendar admitDate = new GregorianCalendar();
-		admitDate.setTime(pat.getInsAdmitDate());
-		admitDate.set(Calendar.YEAR, today.get(Calendar.YEAR));
-		
-		if (today.after(admitDate)){
-			admitDate.set(Calendar.YEAR, admitDate.get(Calendar.YEAR)+1);
-		}
-		
-		long deltaInMillis = admitDate.getTimeInMillis() - today.getTimeInMillis();
-		if (deltaInMillis <= SIXTY_DAYS_IN_MILLIS){
-			int numDays = (int)(deltaInMillis / ONE_DAY_IN_MILLIS)+1;
-            JOptionPane.showMessageDialog(apptDialog,
-                    "Annual Evaluation is due in "+numDays+" days.\n"+
-                    "Please schedule a 60 minute annual evaluation for "+pat.getLastName()+", "+pat.getFirstName()+"!",
-                    "Annual Evaluation Alert",
-                    JOptionPane.INFORMATION_MESSAGE);    			
-		}
-    }
-    
     private void refreshTable(){
         fireEditingStopped();
         apptTable.setVisible(false);
